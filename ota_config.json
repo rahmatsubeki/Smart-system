@@ -1,0 +1,6 @@
+{
+  "firmware_version": "1.0.0",
+  "download_url": "https://example.com/firmware/firmware_v1.0.0.bin",
+  "release_notes": "Perubahan dan peningkatan dalam versi 1.0.0",
+  "target_devices": ["DeviceA", "DeviceB", "DeviceC"]
+}
