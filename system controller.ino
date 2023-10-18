@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6L8dR8HBQ"
 #define BLYNK_TEMPLATE_NAME "System Plts"
-#define BLYNK_FIRMWARE_VERSION "1.0"
+#define BLYNK_FIRMWARE_VERSION "1.1"
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <ESP8266WiFi.h>
