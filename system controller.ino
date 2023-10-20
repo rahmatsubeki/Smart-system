@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6L8dR8HBQ"
 #define BLYNK_TEMPLATE_NAME "System Plts"
-#define BLYNK_FIRMWARE_VERSION "1.0"
+#define BLYNK_FIRMWARE_VERSION "1.0.1"
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <ESP8266WiFi.h>
@@ -20,7 +20,7 @@ char auth[] = "Zu7zjfvslnsdPjd0F4HMfIG5CL00_vOw";
 const char* ssid = "RMT";
 const char* password = "dawarblandong";
 const char* firmwareURL = "https://github.com/rahmatsubeki/Smart-system/blob/main/system%20controller.ino";  // Ganti URL dengan URL firmware di GitHub
-const int currentFirmwareVersion = 1; 
+const int currentFirmwareVersion = 1.0.1; 
 
 // Sensor INA219
 Adafruit_INA219 ina219;
