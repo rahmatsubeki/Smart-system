@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6L8dR8HBQ"
 #define BLYNK_TEMPLATE_NAME "System Plts"
-#define BLYNK_FIRMWARE_VERSION "1.0.1"
+#define BLYNK_FIRMWARE_VERSION "1.0"
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <ESP8266WiFi.h>
@@ -20,7 +20,7 @@ char auth[] = "Zu7zjfvslnsdPjd0F4HMfIG5CL00_vOw";
 const char* ssid = "RMT";
 const char* password = "dawarblandong";
 const char* firmwareURL = "https://github.com/rahmatsubeki/Smart-system/blob/main/system%20controller.ino";  // Ganti URL dengan URL firmware di GitHub
-const int currentFirmwareVersion = 1.0.1; 
+const int currentFirmwareVersion = 1; 
 
 // Sensor INA219
 Adafruit_INA219 ina219;
@@ -158,22 +158,22 @@ void loop() {
 
   String systemStatusMessage;
 
-  if(loadvoltage > 11.0){
+  if(loadvoltage > 11){
       digitalWrite(relayPin1, HIGH);
       systemStatusMessage = "System ON";
       // digitalWrite(relayPin2, HIGH);
-
-      if ((currentHour == 4 && currentMinute >= 15) || (currentHour >= 4 && currentHour <= 16) || (currentHour == 16 && currentMinute <= 30)) {
-          avgBusVoltage = calculateAverageBusVoltage();
-          digitalWrite(relayPin2, LOW);
-      } else {
-        if (loadvoltage > 11.4){
-          avgBusVoltage = 0.0;
-          digitalWrite(relayPin2, HIGH);
-        }else{
-          avgBusVoltage = 0.0;
-          digitalWrite(relayPin2, LOW);
+      if (loadvoltage > 11.50){
+        if ((currentHour == 4 && currentMinute >= 15) || (currentHour >= 4 && currentHour <= 16) || (currentHour == 16 && currentMinute <= 30)) {
+            avgBusVoltage = calculateAverageBusVoltage();
+            digitalWrite(relayPin2, LOW);
+        } else {
+            avgBusVoltage = 0.0;
+            digitalWrite(relayPin2, HIGH);
         }
+      }else{
+            avgBusVoltage = 0.0;
+            digitalWrite(relayPin2, LOW);
+
       }
   }else{
       digitalWrite(relayPin1, LOW);
@@ -206,10 +206,12 @@ void checkUpdateButton() {
     // Mengupdate kode dari URL firmware yang ditentukan
     t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://github.com/rahmatsubeki/Smart-system/blob/main/system%20controller.ino");
 
+    Blynk.virtualWrite(V10, ESP.getFreeHeap());
     // Memeriksa hasil pembaruan
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Blynk.virtualWrite(V10,"Update gagal");
+        Blynk.virtualWrite(V10,ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
         Serial.printf("Update gagal, error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
         break;
         
@@ -225,6 +227,7 @@ void checkUpdateButton() {
     }
 
     Blynk.virtualWrite(V9, 0);
+    Blynk.virtualWrite(V10,"");
   }
 }
 
