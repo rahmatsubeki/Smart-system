@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6L8dR8HBQ"
 #define BLYNK_TEMPLATE_NAME "System Plts"
-#define BLYNK_FIRMWARE_VERSION "1.1"
+#define BLYNK_FIRMWARE_VERSION "1.0"
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <ESP8266WiFi.h>
@@ -67,6 +67,8 @@ BLYNK_WRITE(V9) {  // Fungsi ini akan dipanggil saat tombol di Blynk ditekan
   int buttonState = param.asInt();
   if (buttonState == HIGH) {  // Tombol ditekan
     Blynk.virtualWrite(V10,"Memeriksa Pembaruan...");
+    delay(10000);
+    checkUpdateButton();
   }
 }
 
@@ -154,20 +156,29 @@ void loop() {
     energyCost=0;
   }
 
+  String systemStatusMessage;
+
   if(loadvoltage > 11.0){
       digitalWrite(relayPin1, HIGH);
+      systemStatusMessage = "System ON";
       // digitalWrite(relayPin2, HIGH);
 
       if ((currentHour == 4 && currentMinute >= 15) || (currentHour >= 4 && currentHour <= 16) || (currentHour == 16 && currentMinute <= 30)) {
-        avgBusVoltage = calculateAverageBusVoltage();
-        digitalWrite(relayPin2, LOW);
+          avgBusVoltage = calculateAverageBusVoltage();
+          digitalWrite(relayPin2, LOW);
       } else {
-        avgBusVoltage = 0.0;
-        digitalWrite(relayPin2, HIGH);
+        if (loadvoltage > 11.4){
+          avgBusVoltage = 0.0;
+          digitalWrite(relayPin2, HIGH);
+        }else{
+          avgBusVoltage = 0.0;
+          digitalWrite(relayPin2, LOW);
+        }
       }
   }else{
       digitalWrite(relayPin1, LOW);
       digitalWrite(relayPin2, LOW);
+      systemStatusMessage = "System OFF";
   }
 
 
@@ -178,6 +189,7 @@ void loop() {
     Blynk.virtualWrite(V2, (current / 1000));//amper pengguna
     Blynk.virtualWrite(V3, (power / 1000));//watt pengguna
     Blynk.virtualWrite(V4, energy);// konsumsi
+    Blynk.virtualWrite(V5, systemStatusMessage);//status
   }
 
   // Tunggu 1 detik sebelum membaca sensor dan mengirim data lagi
@@ -197,17 +209,22 @@ void checkUpdateButton() {
     // Memeriksa hasil pembaruan
     switch (ret) {
       case HTTP_UPDATE_FAILED:
+        Blynk.virtualWrite(V10,"Update gagal");
         Serial.printf("Update gagal, error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
         break;
         
       case HTTP_UPDATE_NO_UPDATES:
         Serial.println("Tidak ada pembaruan tersedia.");
+        Blynk.virtualWrite(V10,"Tidak ada pembaruan tersedia.");
         break;
         
       case HTTP_UPDATE_OK:
+        Blynk.virtualWrite(V10,"Pembaruan berhasil!");
         Serial.println("Pembaruan berhasil!");
         break;
     }
+
+    Blynk.virtualWrite(V9, 0);
   }
 }
 
