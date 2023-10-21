@@ -134,6 +134,17 @@ void loop() {
   Blynk.run();
   timeClient.update();
   ArduinoOTA.handle();
+ if (WiFi.status() != WL_CONNECTED) {
+    // Jika tidak terhubung, matikan relay
+    digitalWrite(relayPin1, LOW);
+   digitalWrite(relayPin2, LOW);
+   digitalWrite(relayPin3, LOW);
+   digitalWrite(relayPin4, LOW);
+    Serial.println("Tidak terhubung ke WiFi. Matikan relay.");
+  } 
+
+  // Tunggu beberapa detik sebelum memeriksa koneksi lagi
+  delay(1000); 
   // Dapatkan waktu saat ini
   int currentHour = (timeClient.getHours() + 7)%24;
   int currentMinute = timeClient.getMinutes();
