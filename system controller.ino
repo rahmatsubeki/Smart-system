@@ -218,7 +218,7 @@ void checkUpdateButton() {
     Serial.println("Tombol update ditekan!");
     
     // Mengupdate kode dari URL firmware yang ditentukan
-    t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://github.com/rahmatsubeki/Smart-system/blob/main/system%20controller.ino");
+    t_httpUpdate_return ret = ESPhttpUpdate.update(client, firmwareURL);
 
     Blynk.virtualWrite(V10, ESP.getFreeHeap());
     // Memeriksa hasil pembaruan
