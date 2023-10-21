@@ -157,22 +157,25 @@ void loop() {
   }
 
   String systemStatusMessage;
-
-  if(loadvoltage > 11){
+  float newloadvoltage = loadvoltage - 0.7;
+  if(newloadvoltage > 11){
       digitalWrite(relayPin1, HIGH);
       systemStatusMessage = "System ON";
       // digitalWrite(relayPin2, HIGH);
-      if (loadvoltage > 11.50){
+      if (newloadvoltage > 11.50){
         if ((currentHour == 4 && currentMinute >= 15) || (currentHour >= 4 && currentHour <= 16) || (currentHour == 16 && currentMinute <= 30)) {
             avgBusVoltage = calculateAverageBusVoltage();
             digitalWrite(relayPin2, LOW);
+            digitalWrite(relayPin3, LOW);
         } else {
             avgBusVoltage = 0.0;
             digitalWrite(relayPin2, HIGH);
+            digitalWrite(relayPin3, HIGH);
         }
       }else{
             avgBusVoltage = 0.0;
             digitalWrite(relayPin2, LOW);
+            digitalWrite(relayPin3, LOW);
 
       }
   }else{
