@@ -141,7 +141,7 @@ void loop() {
    digitalWrite(relayPin3, LOW);
    digitalWrite(relayPin4, LOW);
     Serial.println("Tidak terhubung ke WiFi. Matikan relay.");
-  } 
+  }else{
 
   // Tunggu beberapa detik sebelum memeriksa koneksi lagi
   delay(1000); 
@@ -184,7 +184,11 @@ void loop() {
             digitalWrite(relayPin3, HIGH);
         }
       }else{
-            avgBusVoltage = 0.0;
+        if ((currentHour == 4 && currentMinute >= 15) || (currentHour >= 4 && currentHour <= 16) || (currentHour == 16 && currentMinute <= 30)) {
+            avgBusVoltage = calculateAverageBusVoltage();
+        }else{
+          avgBusVoltage = 0.0;
+        }
             digitalWrite(relayPin2, LOW);
             digitalWrite(relayPin3, LOW);
 
@@ -205,6 +209,7 @@ void loop() {
     Blynk.virtualWrite(V4, energy);// konsumsi
     Blynk.virtualWrite(V5, systemStatusMessage);//status
   }
+ }
 
   // Tunggu 1 detik sebelum membaca sensor dan mengirim data lagi
   delay(5000);
@@ -225,6 +230,7 @@ void checkUpdateButton() {
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Blynk.virtualWrite(V10,"Update gagal");
+        delay(3000);
         Blynk.virtualWrite(V10,ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
         Serial.printf("Update gagal, error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
         break;
