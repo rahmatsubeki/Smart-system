@@ -19,7 +19,7 @@ WiFiClient client;
 char auth[] = "Zu7zjfvslnsdPjd0F4HMfIG5CL00_vOw";
 const char* ssid = "RMT";
 const char* password = "dawarblandong";
-const char* firmwareURL = "https://raw.githubusercontent.com/rahmatsubeki/Smart-system/main/system%20controller.ino";  // Ganti URL dengan URL firmware di GitHub
+const char* firmwareURL = "https://raw.githubusercontent.com/rahmatsubeki/Smart-system/main/system_controller.bin";  // Ganti URL dengan URL firmware di GitHub
 const int currentFirmwareVersion = 1.2; 
 
 // Sensor INA219
